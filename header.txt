@@ -3,7 +3,7 @@
 // @author       Iewnfod
 // @version      1.0.2
 // @description  使用 .eat_what 获取随机食物
-// @timestamp    1772170072
+// @timestamp    1772170576
 // @license      MIT
 // @homepageURL  https://github.com/iewnfod/sealdice-eat
 // ==/UserScript==

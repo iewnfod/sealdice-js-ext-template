@@ -46,10 +46,10 @@ function main() {
   eatWhatCmd.help = [
     '使用 .eat_what [日期时间] [时区] 获取随机食物推荐。',
     '示例:',
-    '.eat_what                             # 当前时间（默认时区 Asia/Shanghai）',
-    '.eat_what 2025-01-01-12:30            # 指定日期时间（默认时区）',
-    '.eat_what 2025-01-01-22:30 America/New_York  # 指定日期时间和时区',
-    '.eat_what help                         # 显示帮助'
+    '.eat_what\t\t\t\t\t\t# 当前时间（默认时区 Asia/Shanghai）',
+    '.eat_what 2026-02-27-12:30\t\t# 指定日期时间（默认时区）',
+    '.eat_what 2026-02-27-22:30 America/New_York\t# 指定日期时间和时区',
+    '.eat_what help\t\t\t\t\t# 显示帮助'
   ].join("\n");
 
   eatWhatCmd.solve = (ctx, msg, cmdArgs) => {
@@ -81,7 +81,7 @@ function main() {
         } else {
           reply.push(`现在是${periodNames[timePeriod]}时间，推荐你吃：${chosenFood}！`);
         }
-        reply.push(`时间: ${targetMoment.format('YYYY-MM-DD HH:mm')}; 时区：${tz}`);
+        reply.push(`时间: ${targetMoment.format('YYYY-MM-DD HH:mm')} ${tz}`);
         seal.replyToSender(ctx, msg, reply.join("\n"));
         return seal.ext.newCmdExecuteResult(true);
       }
