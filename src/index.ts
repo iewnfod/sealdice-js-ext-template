@@ -29,7 +29,7 @@ const periodNames: Record<string, string> = {
   lunch: "午餐",
   dinner: "晚餐",
   nightSnack: "夜宵",
-  other: "不知道什么"
+  other: "其他"
 };
 
 function main() {
@@ -46,10 +46,11 @@ function main() {
   eatWhatCmd.help = [
     '使用 .eat_what [日期时间] [时区] 获取随机食物推荐。',
     '示例:',
-    '.eat_what\t\t\t\t\t\t# 当前时间（默认时区 Asia/Shanghai）',
-    '.eat_what 2026-02-27-12:30\t\t# 指定日期时间（默认时区）',
+    '.eat_what\t\t\t\t\t\t# 当前时间 (默认时区 Asia/Shanghai)',
+    '.eat_what 2026-02-27-12:30\t\t# 指定日期时间 (默认时区)',
     '.eat_what 2026-02-27-22:30 America/New_York\t# 指定日期时间和时区',
-    '.eat_what help\t\t\t\t\t# 显示帮助'
+    '.eat_what help\t\t\t\t\t# 显示帮助',
+    '.eat_what list\t\t\t\t\t# 列出各时间段的食物选项'
   ].join("\n");
 
   eatWhatCmd.solve = (ctx, msg, cmdArgs) => {
@@ -61,6 +62,14 @@ function main() {
         const ret = seal.ext.newCmdExecuteResult(true);
         ret.showHelp = true;
         return ret;
+      }
+      case 'list': {
+        const reply = [];
+        Object.entries(foodByTime).forEach(([period, foods]) => {
+          reply.push(`${periodNames[period]}: ${foods.join(", ")}`);
+        });
+        seal.replyToSender(ctx, msg, reply.join("\n"));
+        return seal.ext.newCmdExecuteResult(true);
       }
       default: {
         let tz = arg2 || 'Asia/Shanghai';
