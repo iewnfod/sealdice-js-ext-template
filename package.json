@@ -1,21 +1,22 @@
 {
-  "name": "a-long-story",
-  "version": "1.0.0",
-  "description": "once upon a time, ...",
+  "name": "sealdice-eat-what",
+  "version": "1.0.2",
   "main": "build/index.js",
   "typings": "build/index.d.ts",
-  "repository": "https://github.com/sealdice/seal-swordworld",
-  "license": "Apache-2.0",
+  "repository": "https://github.com/iewnfod/sealdice-eat",
+  "license": "MIT",
   "keywords": [],
   "scripts": {
-    "build": "cross-env NODE_ENV=production node tools/build.js",
+    "build": "node tools/update-header.js && cross-env NODE_ENV=production node tools/build.js",
     "build-dev": "cross-env NODE_ENV=dev node tools/build.js"
   },
   "engines": {
     "node": ">=10"
   },
   "dependencies": {
-    "lodash-es": "^4.17.21"
+    "lodash-es": "^4.17.21",
+    "moment": "^2.30.1",
+    "moment-timezone": "^0.6.0"
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.12",
