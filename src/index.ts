@@ -44,11 +44,13 @@ function main() {
   const eatWhatCmd = seal.ext.newCmdItemInfo();
   eatWhatCmd.name = 'eat_what';
   eatWhatCmd.help = [
-    '使用 .eat_what [日期时间] [时区] 获取随机食物推荐。',
+    '使用 .eat_what [日期时间] [时区] 获取随机食物推荐。时区和日期时间可以任意顺序排列。',
     '示例:',
     '.eat_what\t\t\t\t\t\t# 当前时间 (默认时区 Asia/Shanghai)',
+    '.eat_what Asia/Tokyo\t\t\t# 获取指定时区的当前时间',
     '.eat_what 2026-02-27-12:30\t\t# 指定日期时间 (默认时区)',
     '.eat_what 2026-02-27-22:30 America/New_York\t# 指定日期时间和时区',
+    '.eat_what America/New_York 2026-02-27-22:30\t# 时区和日期时间可以任意顺序',
     '.eat_what help\t\t\t\t\t# 显示帮助',
     '.eat_what list\t\t\t\t\t# 列出各时间段的食物选项'
   ].join("\n");
@@ -72,20 +74,35 @@ function main() {
         return seal.ext.newCmdExecuteResult(true);
       }
       default: {
-        let tz = arg2 || 'Asia/Shanghai';
+        // 判断参数是时区还是时间字符串，支持任意顺序排列
+        const isTimezone = (s: string) => !!moment.tz.zone(s);
+
+        let tz = 'Asia/Shanghai';
+        let timeStr: string | null = null;
+
+        for (const arg of [arg1, arg2]) {
+          if (!arg) continue;
+          if (isTimezone(arg)) {
+            tz = arg;
+          } else {
+            timeStr = arg;
+          }
+        }
+
         let targetMoment = moment.tz(tz);
-        if (arg1) {
-          const parsedMoment = moment.tz(arg1, tz);
+        if (timeStr) {
+          const parsedMoment = moment.tz(timeStr, tz);
           if (parsedMoment.isValid()) {
             targetMoment = parsedMoment;
           }
         }
+
         const timePeriod = getTimePeriod(targetMoment.hour());
         const foodList = foodByTime[timePeriod] || allFood;
         const chosenFood = sample(foodList);
 
         let reply = [];
-        if (arg1) {
+        if (timeStr) {
           reply.push(`${periodNames[timePeriod]}时间推荐你吃：${chosenFood}！`);
         } else {
           reply.push(`现在是${periodNames[timePeriod]}时间，推荐你吃：${chosenFood}！`);
